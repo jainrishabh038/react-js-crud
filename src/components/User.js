@@ -16,15 +16,15 @@ function User() {
 
   return (
     <div className='container mt-5'>
-      <div class='card' styles='width: 18rem;'>
-        <div class='card-body'>
-          <h5 class='card-title text-center ' style={{ fontSize: '30px' }}>
+      <div className='card' styles='width: 18rem;'>
+        <div className='card-body'>
+          <h5 className='card-title text-center ' style={{ fontSize: '30px' }}>
             First Name : {user.first_name}
           </h5>
-          <h5 class='card-title text-center ' style={{ fontSize: '30px' }}>
+          <h5 className='card-title text-center ' style={{ fontSize: '30px' }}>
             Last Name : {user.last_name}
           </h5>
-          <h5 class='card-title text-center ' style={{ fontSize: '30px' }}>
+          <h5 className='card-title text-center ' style={{ fontSize: '30px' }}>
             User Age : {user.age}
           </h5>
         </div>

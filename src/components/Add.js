@@ -1,24 +1,37 @@
 import axios from 'axios';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function Add() {
   const navigate = useNavigate();
+  const { id } = useParams();
+
   const [userData, setUserData] = useState({
     name: '',
     username: '',
     email: '',
   });
-  const AddUser = async () => {
+
+  useEffect(() => {
+    id && loadUsers();
+  }, [id]);
+
+  const loadUsers = async () => {
+    const result = await axios.get(`https://6459f55795624ceb21f36cbc.mockapi.io/admin/${id}`);
+    setUserData(result.data);
+  };
+  const addUser = async () => {
     await axios.post('https://6459f55795624ceb21f36cbc.mockapi.io/admin', userData);
     navigate('/');
   };
-
-  console.warn('ssa', userData);
+  const Edituser = async () => {
+    await axios.put(`https://6459f55795624ceb21f36cbc.mockapi.io/admin/${id}`, userData);
+    navigate('/');
+  };
   return (
     <div className='container'>
-      <div class='mb-3 '>
-        <label for='exampleFormControlInput1' class='form-label'>
+      <div className='mb-3 '>
+        <label for='exampleFormControlInput1' className='form-label'>
           Name
         </label>
         <input
@@ -28,14 +41,14 @@ function Add() {
             setUserData({ ...userData, first_name: data.target.value });
           }}
           type='text'
-          class='form-control'
+          className='form-control'
           id='exampleFormControlInput1'
           placeholder='Name'
         />
       </div>
 
-      <div class='mb-3 '>
-        <label for='exampleFormControlInput1' class='form-label'>
+      <div className='mb-3 '>
+        <label for='exampleFormControlInput1' className='form-label'>
           Last Name
         </label>
         <input
@@ -45,14 +58,14 @@ function Add() {
             setUserData({ ...userData, last_name: data.target.value });
           }}
           type='text'
-          class='form-control'
+          className='form-control'
           id='exampleFormControlInput1'
           placeholder='Name'
         />
       </div>
 
-      <div class='mb-3'>
-        <label for='exampleFormControlInput1' class='form-label'>
+      <div className='mb-3'>
+        <label for='exampleFormControlInput1' className='form-label'>
           age
         </label>
         <input
@@ -62,14 +75,14 @@ function Add() {
             setUserData({ ...userData, age: data.target.value });
           }}
           type='text'
-          class='form-control'
+          className='form-control'
           id='exampleFormControlInput1'
           placeholder='name@example.com'
         />
       </div>
 
-      <button onClick={AddUser} type='button' class='btn btn-primary w-100'>
-        Create Data
+      <button onClick={id ? Edituser : addUser} type='button' className='btn btn-primary w-100'>
+        {id ? 'update Data' : 'createData'}
       </button>
     </div>
   );

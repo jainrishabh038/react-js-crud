@@ -1,10 +1,13 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { GetUserData } from '../redux/slice';
 
 function Home() {
-  const [users, setUsers] = useState([]);
+  const { userData } = useSelector((state) => state.counter);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     loadUsers();
@@ -12,68 +15,62 @@ function Home() {
 
   const loadUsers = async () => {
     const result = await axios.get('https://6459f55795624ceb21f36cbc.mockapi.io/admin');
-    setUsers(result.data.reverse());
+    dispatch(GetUserData(result.data.reverse()));
   };
 
   const deleteUser = async (DelId) => {
     let confirmation = window.confirm(`Are you Sure you want to  delete  this `);
     if (confirmation) {
-      await axios.delete(`https://6459f55795624ceb21f36cbc.mockapi.io/admin/${DelId}`);
+      await axios.delete(`https://6459f55795624ceb21f36cbc.mockapi.io/admin/${DelId.id}`);
       loadUsers();
     }
   };
 
-  const renderbody = () => {
+  const renderBody = () => {
     return (
-      <div className='container'>
-        <div className='py-4'>
-          <h1>Users</h1>
-          <table class='table border shadow'>
-            <thead class='thead-dark'>
-              <tr>
-                <th scope='col'>Name</th>
-                <th scope='col'>lastname</th>
-                <th scope='col'>Age</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user, index) => (
+      <>
+        <div className='container'>
+          <div className='py-4'>
+            <h1>Users</h1>
+            <table className='table border shadow'>
+              <thead className='thead-dark'>
                 <tr>
-                  <td>{user.first_name}</td>
-                  <td>{user.last_name}</td>
-                  <td>{user.age}</td>
-                  <td className=''>
-                    <div onClick={() => navigate(`/show/${user.id}`)} class='btn btn-primary mr-2 me-2'>
-                      View
-                    </div>
-                    <div onClick={() => navigate(`/edit/${user.id}`)} class='btn btn-primary mr-2 me-2'>
-                      Edit
-                    </div>
-                    <div onClick={() => deleteUser(user.id)} class='btn btn-primary mr-2 me-2'>
-                      delete
-                    </div>
-                  </td>
+                  <th scope='col'>Sr. No.</th>
+                  <th scope='col'>Name</th>
+                  <th scope='col'>lastname</th>
+                  <th scope='col'>Age</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {userData.map((user, index) => (
+                  <tr>
+                    <td>{index + 1}</td>
+                    <td>{user.first_name}</td>
+                    <td>{user.last_name}</td>
+                    <td>{user.age}</td>
+                    <td className=''>
+                      <div onClick={() => navigate(`/show/${user.id}`)} className='btn btn-primary mr-2 me-2'>
+                        View
+                      </div>
+                      <div onClick={() => navigate(`/add/${user.id}`)} className='btn btn-primary mr-2 me-2'>
+                        Edit
+                      </div>
+                      <div onClick={() => deleteUser(user)} className='btn btn-primary mr-2 me-2'>
+                        delete
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      </>
     );
   };
 
-  return (
-    <div>
-      {users.length > 0 ? (
-        renderbody()
-      ) : (
-        <div className='container text-center mt-5' style={{ fontSize: '20px' }}>
-          No Data Found
-        </div>
-      )}
-    </div>
-  );
+  return <>{<div className='text-center'>{userData.length > 0 ? renderBody() : 'Data Not Found'}</div>}</>;
 }
 
 export default Home;
