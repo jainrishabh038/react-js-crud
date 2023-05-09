@@ -18,46 +18,60 @@ function Home() {
   const deleteUser = async (DelId) => {
     let confirmation = window.confirm(`Are you Sure you want to  delete  this `);
     if (confirmation) {
-      await axios.delete(`https://6459f55795624ceb21f36cbc.mockapi.io/admin/${DelId.id}`);
+      await axios.delete(`https://6459f55795624ceb21f36cbc.mockapi.io/admin/${DelId}`);
       loadUsers();
     }
   };
 
-  return (
-    <div className='container'>
-      <div className='py-4'>
-        <h1>Home Page</h1>
-        <table class='table border shadow'>
-          <thead class='thead-dark'>
-            <tr>
-              <th scope='col'>Name</th>
-              <th scope='col'>lastname</th>
-              <th scope='col'>Age</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user, index) => (
+  const renderbody = () => {
+    return (
+      <div className='container'>
+        <div className='py-4'>
+          <h1>Users</h1>
+          <table class='table border shadow'>
+            <thead class='thead-dark'>
               <tr>
-                <td>{user.first_name}</td>
-                <td>{user.last_name}</td>
-                <td>{user.age}</td>
-                <td className=''>
-                  <div onClick={() => navigate(`/show/${user.id}`)} class='btn btn-primary mr-2 me-2'>
-                    View
-                  </div>
-                  <div onClick={() => navigate(`/edit/${user.id}`)} class='btn btn-primary mr-2 me-2'>
-                    Edit
-                  </div>
-                  <div onClick={() => deleteUser(user)} class='btn btn-primary mr-2 me-2'>
-                    delete
-                  </div>
-                </td>
+                <th scope='col'>Name</th>
+                <th scope='col'>lastname</th>
+                <th scope='col'>Age</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {users.map((user, index) => (
+                <tr>
+                  <td>{user.first_name}</td>
+                  <td>{user.last_name}</td>
+                  <td>{user.age}</td>
+                  <td className=''>
+                    <div onClick={() => navigate(`/show/${user.id}`)} class='btn btn-primary mr-2 me-2'>
+                      View
+                    </div>
+                    <div onClick={() => navigate(`/edit/${user.id}`)} class='btn btn-primary mr-2 me-2'>
+                      Edit
+                    </div>
+                    <div onClick={() => deleteUser(user.id)} class='btn btn-primary mr-2 me-2'>
+                      delete
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
+    );
+  };
+
+  return (
+    <div>
+      {users.length > 0 ? (
+        renderbody()
+      ) : (
+        <div className='container text-center mt-5' style={{ fontSize: '20px' }}>
+          No Data Found
+        </div>
+      )}
     </div>
   );
 }
