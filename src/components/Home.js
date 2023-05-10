@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { GetUserData } from '../redux/slice';
+import { deleteItem, GetUserData } from '../redux/slice';
 
 function Home() {
   const { userData } = useSelector((state) => state.counter);
@@ -21,7 +21,9 @@ function Home() {
   const deleteUser = async (DelId) => {
     let confirmation = window.confirm(`Are you Sure you want to  delete  this `);
     if (confirmation) {
-      await axios.delete(`https://6459f55795624ceb21f36cbc.mockapi.io/admin/${DelId.id}`);
+      const result = await axios.delete(`https://6459f55795624ceb21f36cbc.mockapi.io/admin/${DelId.id}`);
+      dispatch(deleteItem(result));
+
       loadUsers();
     }
   };

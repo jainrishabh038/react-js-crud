@@ -1,11 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { AddUserData, EditUserData } from '../redux/slice';
 
 function Add() {
   const navigate = useNavigate();
   const { id } = useParams();
-
+  const dispatch = useDispatch();
   const [userData, setUserData] = useState({
     name: '',
     username: '',
@@ -21,11 +23,13 @@ function Add() {
     setUserData(result.data);
   };
   const addUser = async () => {
-    await axios.post('https://6459f55795624ceb21f36cbc.mockapi.io/admin', userData);
+    const result = await axios.post('https://6459f55795624ceb21f36cbc.mockapi.io/admin', userData);
+    dispatch(AddUserData(result));
     navigate('/');
   };
   const Edituser = async () => {
-    await axios.put(`https://6459f55795624ceb21f36cbc.mockapi.io/admin/${id}`, userData);
+    const result = await axios.put(`https://6459f55795624ceb21f36cbc.mockapi.io/admin/${id}`, userData);
+    dispatch(EditUserData(result));
     navigate('/');
   };
   return (
